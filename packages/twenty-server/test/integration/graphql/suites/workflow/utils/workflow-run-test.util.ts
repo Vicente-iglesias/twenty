@@ -1,5 +1,6 @@
 import request from 'supertest';
 import { WORKFLOW_RUN_GQL_FIELDS } from 'test/integration/constants/workflow-gql-fields.constants';
+import { waitForQueueIdle } from 'test/integration/utils/wait-for-queue-idle';
 
 const client = request(`http://localhost:${APP_PORT}`);
 
@@ -119,21 +120,8 @@ export const destroyWorkflowRun = async (
 
 export const waitForWorkflowCompletion = async (
   workflowRunId: string,
-  maxAttempts = 30,
-  intervalMs = 500,
 ): Promise<WorkflowRunResponse | null> => {
-  let workflowRun = await getWorkflowRun(workflowRunId);
-  let attempts = 0;
+  await waitForQueueIdle();
 
-  while (
-    workflowRun?.status === 'RUNNING' &&
-    attempts < maxAttempts &&
-    workflowRun !== null
-  ) {
-    await new Promise((resolve) => setTimeout(resolve, intervalMs));
-    workflowRun = await getWorkflowRun(workflowRunId);
-    attempts++;
-  }
-
-  return workflowRun;
+  return getWorkflowRun(workflowRunId);
 };
