@@ -35,6 +35,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+    labels:
+      - traefik.http.services.http-0-s12b4al9j26lgote08h3ng6p-server.loadbalancer.server.port=3000
+      - traefik.http.services.https-0-s12b4al9j26lgote08h3ng6p-server.loadbalancer.server.port=3000
+      - traefik.http.routers.http-0-s12b4al9j26lgote08h3ng6p-server.service=http-0-s12b4al9j26lgote08h3ng6p-server
+      - traefik.http.routers.https-0-s12b4al9j26lgote08h3ng6p-server.service=https-0-s12b4al9j26lgote08h3ng6p-server
     restart: always
 
   worker:
